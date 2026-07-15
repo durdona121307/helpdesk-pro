@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -10,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("
-            ALTER TABLE tickets
-            MODIFY COLUMN status
-            ENUM('open', 'in_progress', 'closed')
-            NOT NULL DEFAULT 'open'
-        ");
+        Schema::table('tickets', function (Blueprint $table) {
+
+            $table->string('status')
+                ->default('open')
+                ->change();
+
+        });
     }
 
     /**
@@ -23,11 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("
-            ALTER TABLE tickets
-            MODIFY COLUMN status
-            ENUM('open', 'pending', 'closed')
-            NOT NULL DEFAULT 'open'
-        ");
+        Schema::table('tickets', function (Blueprint $table) {
+
+            $table->string('status')
+                ->default('open')
+                ->change();
+
+        });
     }
 };
