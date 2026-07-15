@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE users RENAME COLUMN admin TO role');
+        if (Schema::hasColumn('users', 'admin')) {
+
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('admin', 'role');
+            });
+
+        }
     }
 
     /**
@@ -20,6 +25,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement('ALTER TABLE users RENAME COLUMN role TO admin');
+        if (Schema::hasColumn('users', 'role')) {
+
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('role', 'admin');
+            });
+
+        }
     }
 };
